@@ -26,8 +26,8 @@ export const storeCryptoStats = asyncHandler(async()=>{
 
 
 export const stats = asyncHandler(async(req,res)=>{
-    const {coin} = req.body;
-    const data = CryptoStat.findOne({coin}).sort({timestamp:-1});
+    const {coin} = req.query;
+    const data = await CryptoStat.findOne({ coin }).sort({ createdAt: -1 });
 
     if(!data) throw new ApiError(404,"Coin Not Found")
     res.status(200).json({
@@ -42,7 +42,7 @@ export const stats = asyncHandler(async(req,res)=>{
 export const deviation = asyncHandler(async(req,res)=>{
     const { coin } = req.query;
     
-    const records = await CryptoStat.find({ coin }).sort({ timestamp: -1 }).limit(100);
+    const records = await CryptoStat.find({ coin }).sort({ createdAt : -1 }).limit(100);
     if (!records.length) throw new ApiError(404,"Data Not Found For Deviation")
     
     const prices = records.map(r => r.price);
@@ -52,7 +52,7 @@ export const deviation = asyncHandler(async(req,res)=>{
     
     res.json({
         succces : true,
-        message : "Deviation fetched succesfully", 
+        message : `Deviation fetched succesfully for ${coin}`, 
         deviation: Number(deviation.toFixed(2))
      });
 })
