@@ -9,9 +9,7 @@ dotenv.config()
 const app = express();
 app.use(express.json());
 
-
 app.use("/api/v1/",cryptoRouter);
-
 
 app.use(errorHandler);
 startRedisSubscriber();
